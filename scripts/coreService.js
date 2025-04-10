@@ -442,8 +442,9 @@ class CoreService {
       if (data.BattleStats) {
         Object.entries(data.BattleStats).forEach(([battleId, newBattleData]) => {
           const existingBattle = this.BattleStats[battleId];
-  
+          
           if (existingBattle) {
+            console.log('load from server');
             this.BattleStats[battleId] = {
               ...existingBattle,
               startTime: newBattleData.startTime,
