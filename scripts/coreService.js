@@ -189,6 +189,7 @@ class CoreService {
     this.sdk.data.hangar.vehicle.info.watch(this.handleHangarVehicle.bind(this));
     this.sdk.data.platoon.isInPlatoon.watch(this.handlePlatoonStatus.bind(this));
     this.sdk.data.battle.arena.watch(this.handleArena.bind(this));
+    this.sdk.data.battle.position.watch(this.handlePosition.bind(this));
     this.sdk.data.battle.onDamage.watch(this.handleOnAnyDamage.bind(this));
     this.sdk.data.battle.onPlayerFeedback.watch(this.handlePlayerFeedback.bind(this));
     this.sdk.data.battle.onBattleResult.watch(this.handleBattleResult.bind(this));
@@ -449,14 +450,16 @@ class CoreService {
   
             Object.entries(newBattleData.players).forEach(([playerId, newPlayerData]) => {
               const existingPlayer = existingBattle.players[playerId];
-  
+              
               if (existingPlayer) {
+                console.log('Дані інших гравців успіщно перезаписані');
                 this.BattleStats[battleId].players[playerId] = {
                   name: newPlayerData.name, 
                   vehicle: newPlayerData.vehicle,
                   damage: Math.max(existingPlayer.damage || 0, newPlayerData.damage || 0),
                   kills: Math.max(existingPlayer.kills || 0, newPlayerData.kills || 0),
                   points: Math.max(existingPlayer.points || 0, newPlayerData.points || 0)
+                  
                 };
               } else {
                 this.BattleStats[battleId].players[playerId] = newPlayerData;
@@ -614,6 +617,14 @@ class CoreService {
     this.BattleStats[this.curentArenaId].players[this.curentPlayerId].name = this.sdk.data.player.name.value;
 
     this.serverData();
+
+  }
+
+  handlePosition(position) {
+    if (!this.curentArenaId || !this.sdk.data.player.id.value) return;
+    console.log('Гравець змінив позицію');
+
+    this.serverDataLoadOtherPlayers();
 
   }
 
