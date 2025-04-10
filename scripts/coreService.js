@@ -665,14 +665,14 @@ class CoreService {
       this.handlePlayerTanking(feedback.data);
     } else if (feedback.type === 'receivedDamage') {
       this.handlePlayerReceivedDamage(feedback.data);
-    } else if (feedback.type === 'targetVisibility') {
-      this.handlePlayerTargetVisibility(feedback.data);
-    } else if (feedback.type === 'detected') {
-      this.handlePlayerDetected(feedback.data);
-    } else if (feedback.type === 'spotted') {
-      this.handlePlayerSpotted(feedback.data);
-    } else  {
-      this.handlePlayerOtherEvents(feedback.data);
+    // } else if (feedback.type === 'targetVisibility') {
+    //   this.handlePlayerTargetVisibility(feedback.data);
+    // } else if (feedback.type === 'detected') {
+    //   this.handlePlayerDetected(feedback.data);
+    // } else if (feedback.type === 'spotted') {
+    //   this.handlePlayerSpotted(feedback.data);
+    // } else  {
+    //   this.handlePlayerOtherEvents(feedback.data);
     } 
   }
 
