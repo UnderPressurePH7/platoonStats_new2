@@ -657,12 +657,12 @@ class CoreService {
       this.handlePlayerTanking(feedback.data);
     } else if (feedback.type === 'receivedDamage') {
       this.handlePlayerReceivedDamage(feedback.data);
-    // } else if (feedback.type === 'targetVisibility') {
-    //   this.handlePlayerTargetVisibility(feedback.data);
-    // } else if (feedback.type === 'detected') {
-    //   this.handlePlayerDetected(feedback.data);
-    // } else if (feedback.type === 'spotted') {
-    //   this.handlePlayerSpotted(feedback.data);
+    } else if (feedback.type === 'targetVisibility') {
+      this.handlePlayerTargetVisibility(feedback.data);
+    } else if (feedback.type === 'detected') {
+      this.handlePlayerDetected(feedback.data);
+    } else if (feedback.type === 'spotted') {
+      this.handlePlayerSpotted(feedback.data);
     // } else  {
     //   this.handlePlayerOtherEvents(feedback.data);
     } 
@@ -721,20 +721,20 @@ class CoreService {
   }
 
   // тестова фігня
-  // handlePlayerTargetVisibility(targetVisibility) {
-  //   if (!this.curentArenaId || !this.curentPlayerId) return;
-  //   this.serverDataLoadOtherPlayers();
-  // }
+  handlePlayerTargetVisibility(targetVisibility) {
+    if (!this.curentArenaId || !this.curentPlayerId) return;
+    this.serverDataLoadOtherPlayers();
+  }
 
-  // handlePlayerDetected(detected){
-  //   if (!this.curentArenaId || !this.curentPlayerId) return;
-  //   this.serverDataLoadOtherPlayers();
-  // }
+  handlePlayerDetected(detected){
+    if (!this.curentArenaId || !this.curentPlayerId) return;
+    this.serverDataLoadOtherPlayers();
+  }
 
-  // handlePlayerSpotted(spotted){
-  //   if (!this.curentArenaId || !this.curentPlayerId) return;
-  //   this.serverDataLoadOtherPlayers();
-  // }
+  handlePlayerSpotted(spotted){
+    if (!this.curentArenaId || !this.curentPlayerId) return;
+    this.serverDataLoadOtherPlayers();
+  }
 
   // // підписка на всі події пов'язані із гравцем
   // handlePlayerOtherEvents(events) {
