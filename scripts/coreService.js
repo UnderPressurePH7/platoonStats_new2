@@ -434,9 +434,9 @@ class CoreService {
       
       const data = await response.json();
   
-      if (!data.success) {
-        return false;
-      }
+      // if (!data.success) {
+      //   return false;
+      // }
       console.log('data successfully received');
   
       if (data.BattleStats) {
