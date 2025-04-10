@@ -28,79 +28,10 @@ class CoreService {
       this.isInPlatoon = false;
     }
 
-    // this.reconnectAttempts = 0;
-    // this.baseDelay = 5000;   
-    // this.maxDelay = 20000;     
-
     this.setupSDKListeners();
     this.eventsCore = new EventEmitter();
     this.loadFromServer();
-    // this.startWebSocketMonitoring();
   }
-
-  // setupWebSocket() {
-  //   const accessKey = this.getAccessKey();
-  //   if (!accessKey || !this.curentPlayerId) return;
-
-  //   const baseUrl = atob(STATS.WS);
-  //   const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  //   const wsUrl = `${wsProtocol}//${baseUrl}?playerId=${this.curentPlayerId}`;
-
-  //   if (this.ws) {
-  //       this.ws.close();
-  //   }
-
-  //   this.ws = new WebSocket(wsUrl);
-    
-  //   this.ws.binaryType = 'arraybuffer';
-
-  //   this.ws.onopen = () => {
-  //       this.reconnectAttempts = 0;
-  //   };
-
-  //   this.ws.onmessage = (event) => {
-  //       try {
-  //           if (event.data instanceof ArrayBuffer) {
-  //               const view = new Uint8Array(event.data);
-  //               const success = view[0] === 1;
-                
-  //               if (success) {
-  //                   console.log('Дані успішно збережені');
-  //               } else {
-  //                   console.log('Помилка при збереженні даних');
-  //               }
-  //           }
-  //       } catch (error) {
-  //           console.error('Помилка обробки WebSocket повідомлення:', error);
-  //       }
-  //   };
-
-  //   this.ws.onerror = (error) => {
-  //       console.error('WebSocket помилка:', error);
-  //   };
-
-  //   this.ws.onclose = () => {
-  //       // console.log('WebSocket з'єднання закрито');
-  //   };
-  // }
-
-  // startWebSocketMonitoring() {
-  //   setInterval(() => {
-  //       if (!this.ws || this.ws.readyState === WebSocket.CLOSED) {
-  //           const delay = Math.min(
-  //               this.baseDelay * Math.pow(2, this.reconnectAttempts),
-  //               this.maxDelay
-  //           );
-            
-  //           setTimeout(() => {
-  //               this.setupWebSocket();
-  //               this.reconnectAttempts++;
-  //           }, delay);
-  //       } else {
-  //           this.reconnectAttempts = 0;
-  //       }
-  //   }, 10000);
-  // }
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -136,9 +67,6 @@ class CoreService {
 
   clearState() {
     localStorage.removeItem('gameState');
-    // if (this.ws) {
-    //   this.ws.close();
-    // }
 
     this.BattleStats = {};
     this.PlayersInfo = {};
@@ -147,7 +75,6 @@ class CoreService {
     this.curentVehicle = null;
     this.isInPlatoon = false;
 
-    // this.setupWebSocket();
   }
 
   initializeBattleStats(arenaId, playerId) {
@@ -181,25 +108,25 @@ class CoreService {
       .filter(key => !isNaN(key))
       .map(Number);
   }
-  
-  isExistsRecord() {
+
+  isExistsPlayerRecord() {
     const playersIds = this.getPlayersIds();
     return (playersIds.includes(this.curentPlayerId));
   }
-  
+
   findBestAndWorstBattle() {
     const allBattles = Object.entries(this.BattleStats).map(([arenaId, battle]) => ({
       id: arenaId,
       ...battle
     }));
-    
+
     if (!allBattles || allBattles.length === 0) {
       return { bestBattle: null, worstBattle: null };
     }
 
     // Фільтруємо тільки завершені бої (не "в бою")
     const completedBattles = allBattles.filter(battle => battle.win !== -1);
-    
+
     if (completedBattles.length === 0) {
       return { bestBattle: null, worstBattle: null };
     }
@@ -214,13 +141,13 @@ class CoreService {
       completedBattles.forEach(battle => {
         try {
           const battlePoints = this.calculateBattlePoints(battle);
-          
+
           // Перевіряємо, чи очки менші за поточного найгіршого бою
           if (battlePoints < worstBattlePoints) {
             worstBattle = battle;
             worstBattlePoints = battlePoints;
           }
-          
+
           // Перевіряємо, чи очки більші за поточного найкращого бою
           if (battlePoints > bestBattlePoints) {
             bestBattle = battle;
@@ -231,7 +158,7 @@ class CoreService {
         }
       });
 
-      return { 
+      return {
         bestBattle: { battle: bestBattle, points: bestBattlePoints },
         worstBattle: { battle: worstBattle, points: worstBattlePoints }
       };
@@ -244,7 +171,7 @@ class CoreService {
   // Допоміжна функція для обчислення загальних очків за бій
   calculateBattlePoints(battle) {
     let battlePoints = 0;
-    
+
     if (battle.win === 1) {
       battlePoints += GAME_POINTS.POINTS_PER_TEAM_WIN;
     }
@@ -363,7 +290,7 @@ class CoreService {
         if (!response.ok && response.status !== 202) {
           throw new Error(`Server error: ${response.status}`);
         }
-        
+
 
         return true;
 
@@ -419,7 +346,7 @@ class CoreService {
       if (!accessKey) {
         throw new Error('Access key not found');
       }
-      
+
       const response = await fetch(`${atob(STATS.BATTLE)}pid/${accessKey}`, {
         method: 'GET',
         headers: {
@@ -427,25 +354,25 @@ class CoreService {
           'X-Player-ID': this.curentPlayerId
         },
       });
-  
+
       if (!response.ok) {
         throw new Error(`Помилка при завантаженні даних: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
-  
+
       // if (data.success) {
       //   return true;
       // }
 
       console.log('data successfully received', data);
-  
+
       if (data.BattleStats) {
         Object.entries(data.BattleStats).forEach(([battleId, newBattleData]) => {
           const existingBattle = this.BattleStats[battleId];
-          
+
           if (existingBattle) {
-            
+
             this.BattleStats[battleId] = {
               ...existingBattle,
               startTime: newBattleData.startTime,
@@ -454,22 +381,22 @@ class CoreService {
               mapName: newBattleData.mapName,
               players: { ...existingBattle.players }
             };
-  
+
             Object.entries(newBattleData.players).forEach(([playerId, newPlayerData]) => {
               const existingPlayer = existingBattle.players[playerId];
-              
+
               if (existingPlayer) {
                 this.BattleStats[battleId].players[playerId] = {
-                  name: newPlayerData.name, 
+                  name: newPlayerData.name,
                   vehicle: newPlayerData.vehicle,
                   damage: Math.max(existingPlayer.damage || 0, newPlayerData.damage || 0),
                   kills: Math.max(existingPlayer.kills || 0, newPlayerData.kills || 0),
                   points: Math.max(existingPlayer.points || 0, newPlayerData.points || 0)
-                  
+
                 };
               } else {
                 this.BattleStats[battleId].players[playerId] = newPlayerData;
-              
+
               }
             });
           } else {
@@ -477,17 +404,17 @@ class CoreService {
             this.BattleStats[battleId] = newBattleData;
           }
         });
-  
+
         return true;
       }
-  
+
       return false;
     } catch (error) {
       console.error('Помилка при завантаженні даних із сервера:', error);
       throw error;
     }
   }
-  
+
 
   async clearServerData() {
     try {
@@ -518,7 +445,7 @@ class CoreService {
 
   async warmupServer() {
     try {
-     
+
       const response = await fetch(`${atob(STATS.STATUS)}`, {
         method: 'GET',
         headers: {
@@ -616,14 +543,15 @@ class CoreService {
     if (this.curentArenaId == null) return;
     if (this.curentPlayerId == null) return;
 
-    this.initializeBattleStats(this.curentArenaId, this.curentPlayerId);
+    if (this.isExistsPlayerRecord()) {
+      this.initializeBattleStats(this.curentArenaId, this.curentPlayerId);
 
-    this.BattleStats[this.curentArenaId].mapName = arenaData.localizedName || 'Unknown Map';
-    this.BattleStats[this.curentArenaId].players[this.curentPlayerId].vehicle = this.curentVehicle;
-    this.BattleStats[this.curentArenaId].players[this.curentPlayerId].name = this.sdk.data.player.name.value;
-      
+      this.BattleStats[this.curentArenaId].mapName = arenaData.localizedName || 'Unknown Map';
+      this.BattleStats[this.curentArenaId].players[this.curentPlayerId].vehicle = this.curentVehicle;
+      this.BattleStats[this.curentArenaId].players[this.curentPlayerId].name = this.sdk.data.player.name.value;
+
       this.serverData();
-
+    }
   }
 
   handleOnAnyDamage(onDamageData) {
@@ -663,9 +591,9 @@ class CoreService {
       this.handlePlayerDetected(feedback.data);
     } else if (feedback.type === 'spotted') {
       this.handlePlayerSpotted(feedback.data);
-    // } else  {
-    //   this.handlePlayerOtherEvents(feedback.data);
-    } 
+      // } else  {
+      //   this.handlePlayerOtherEvents(feedback.data);
+    }
   }
 
   handlePlayerDamage(damageData) {
@@ -673,11 +601,12 @@ class CoreService {
 
     const arenaId = this.curentArenaId;
     const playerId = this.curentPlayerId;
+    if (this.isExistsPlayerRecord()) {
+      this.BattleStats[arenaId].players[playerId].damage += damageData.damage;
+      this.BattleStats[arenaId].players[playerId].points += damageData.damage * GAME_POINTS.POINTS_PER_DAMAGE;
 
-    this.BattleStats[arenaId].players[playerId].damage += damageData.damage;
-    this.BattleStats[arenaId].players[playerId].points += damageData.damage * GAME_POINTS.POINTS_PER_DAMAGE;
-
-    this.serverData();
+      this.serverData();
+    }
   }
 
   handlePlayerKill(killData) {
@@ -685,12 +614,13 @@ class CoreService {
 
     const arenaId = this.curentArenaId;
     const playerId = this.curentPlayerId;
+    if (this.isExistsPlayerRecord()) {
+      this.BattleStats[arenaId].players[playerId].kills += 1;
+      this.BattleStats[arenaId].players[playerId].points += GAME_POINTS.POINTS_PER_FRAG;
 
-    this.BattleStats[arenaId].players[playerId].kills += 1;
-    this.BattleStats[arenaId].players[playerId].points += GAME_POINTS.POINTS_PER_FRAG;
-
-    this.serverData();
-   }
+      this.serverData();
+    }
+  }
 
   handlePlayerRadioAssist(radioAssist) {
     if (!radioAssist || !this.curentArenaId || !this.curentPlayerId) return;
@@ -726,12 +656,12 @@ class CoreService {
     this.serverDataLoadOtherPlayers();
   }
 
-  handlePlayerDetected(detected){
+  handlePlayerDetected(detected) {
     if (!this.curentArenaId || !this.curentPlayerId) return;
     this.serverDataLoadOtherPlayers();
   }
 
-  handlePlayerSpotted(spotted){
+  handlePlayerSpotted(spotted) {
     if (!this.curentArenaId || !this.curentPlayerId) return;
     this.serverDataLoadOtherPlayers();
   }
@@ -748,7 +678,7 @@ class CoreService {
       console.error("Invalid battle result data");
       return;
     }
-    
+
     const arenaId = result.arenaUniqueID;
     if (!arenaId) return;
 
@@ -784,15 +714,11 @@ class CoreService {
     this.warmupServer();
     this.saveState();
     this.getRandomDelay(); // тест
-    this.serverData();
-    
-  }
+    if (this.isExistsPlayerRecord()) {
+      this.serverData();
+    }
 
-//   cleanup() {
-//     if (this.ws) {
-//       this.ws.close();
-//     }
-//   }
+  }
 }
 
 export default CoreService;
