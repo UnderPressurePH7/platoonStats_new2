@@ -419,7 +419,7 @@ class CoreService {
       if (!accessKey) {
         throw new Error('Access key not found');
       }
-  
+      
       const response = await fetch(`${atob(STATS.BATTLE)}pid/${accessKey}`, {
         method: 'GET',
         headers: {
@@ -431,7 +431,7 @@ class CoreService {
       if (!response.ok) {
         throw new Error(`Помилка при завантаженні даних: ${response.statusText}`);
       }
-  
+      console.log('data successfully received');
       const data = await response.json();
   
       if (data.success) {
@@ -456,7 +456,6 @@ class CoreService {
               const existingPlayer = existingBattle.players[playerId];
               
               if (existingPlayer) {
-                console.log('data successfully received');
                 this.BattleStats[battleId].players[playerId] = {
                   name: newPlayerData.name, 
                   vehicle: newPlayerData.vehicle,
@@ -615,7 +614,6 @@ class CoreService {
     if (this.curentArenaId == null) return;
     if (this.curentPlayerId == null) return;
 
-    if (this.isExistsRecord()) {
     this.initializeBattleStats(this.curentArenaId, this.curentPlayerId);
 
     this.BattleStats[this.curentArenaId].mapName = arenaData.localizedName || 'Unknown Map';
@@ -623,7 +621,6 @@ class CoreService {
     this.BattleStats[this.curentArenaId].players[this.curentPlayerId].name = this.sdk.data.player.name.value;
       
       this.serverData();
-    }
 
   }
 
@@ -678,10 +675,7 @@ class CoreService {
     this.BattleStats[arenaId].players[playerId].damage += damageData.damage;
     this.BattleStats[arenaId].players[playerId].points += damageData.damage * GAME_POINTS.POINTS_PER_DAMAGE;
 
-    
-    if (this.isExistsRecord()) {
     this.serverData();
-    }
   }
 
   handlePlayerKill(killData) {
@@ -693,10 +687,8 @@ class CoreService {
     this.BattleStats[arenaId].players[playerId].kills += 1;
     this.BattleStats[arenaId].players[playerId].points += GAME_POINTS.POINTS_PER_FRAG;
 
-    if (this.isExistsRecord()) {
-      this.serverData();
-      }
-  }
+    this.serverData();
+   }
 
   handlePlayerRadioAssist(radioAssist) {
     if (!radioAssist || !this.curentArenaId || !this.curentPlayerId) return;
@@ -790,9 +782,7 @@ class CoreService {
     this.warmupServer();
     this.saveState();
     this.getRandomDelay(); // тест
-    if (this.isExistsRecord()) {
-      this.serverData();
-    }
+    this.serverData();
     
   }
 
