@@ -32,8 +32,6 @@ class CoreService {
     // this.baseDelay = 5000;   
     // this.maxDelay = 20000;     
 
-    this.isRunning = false;
-    this.delay = 300000; 
     this.setupSDKListeners();
     this.eventsCore = new EventEmitter();
     this.loadFromServer();
@@ -583,13 +581,6 @@ class CoreService {
     }
   }
 
-  delayServerDataLoadOtherPlayers() {
-    while(this.isRunning){
-      this.sleep(this.delay)
-      this.serverDataLoadOtherPlayers();
-    }
-  }
-
   handlePlatoonStatus(isInPlatoon) {
     this.isInPlatoon = isInPlatoon;
     this.saveState();
@@ -631,9 +622,7 @@ class CoreService {
     this.BattleStats[this.curentArenaId].players[this.curentPlayerId].vehicle = this.curentVehicle;
     this.BattleStats[this.curentArenaId].players[this.curentPlayerId].name = this.sdk.data.player.name.value;
       
-      this.isRunning = true;
       this.serverData();
-      // this.delayServerDataLoadOtherPlayers();
     }
 
   }
@@ -783,7 +772,6 @@ class CoreService {
         }
       }
     }
-    this.isRunning = false;
     this.warmupServer();
     this.saveState();
     this.getRandomDelay(); // тест
