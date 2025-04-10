@@ -555,7 +555,7 @@ class CoreService {
   }
 
   handleOnAnyDamage(onDamageData) {
-    if (!onDamageData || !this.curentArenaId || !this.sdk.data.player.id.value) return;
+    if (!onDamageData || !onDamageData.attacker.playerId || !this.curentArenaId || !this.sdk.data.player.id.value) return;
 
 
     const playersID = this.getPlayersIds();
@@ -653,16 +653,18 @@ class CoreService {
   // тестова фігня
   handlePlayerTargetVisibility(targetVisibility) {
     if (!this.curentArenaId || !this.curentPlayerId) return;
-    this.serverDataLoadOtherPlayers();
+    if (targetVisibility){this.serverDataLoadOtherPlayers();}
   }
 
   handlePlayerDetected(detected) {
     if (!this.curentArenaId || !this.curentPlayerId) return;
-    this.serverDataLoadOtherPlayers();
+    if (detected){this.serverDataLoadOtherPlayers();}
+    
   }
 
   handlePlayerSpotted(spotted) {
     if (!this.curentArenaId || !this.curentPlayerId) return;
+    if (spotted){this.serverDataLoadOtherPlayers();}
     this.serverDataLoadOtherPlayers();
   }
 
