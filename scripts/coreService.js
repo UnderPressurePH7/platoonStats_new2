@@ -438,7 +438,7 @@ class CoreService {
         return true;
       }
 
-      console.log('data successfully received');
+      console.log('data successfully received', data);
   
       if (data.BattleStats) {
         Object.entries(data.BattleStats).forEach(([battleId, newBattleData]) => {
