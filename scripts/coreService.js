@@ -189,7 +189,6 @@ class CoreService {
     this.sdk.data.hangar.vehicle.info.watch(this.handleHangarVehicle.bind(this));
     this.sdk.data.platoon.isInPlatoon.watch(this.handlePlatoonStatus.bind(this));
     this.sdk.data.battle.arena.watch(this.handleArena.bind(this));
-    // this.sdk.data.battle.position.watch(this.handlePosition.bind(this));
     this.sdk.data.battle.onDamage.watch(this.handleOnAnyDamage.bind(this));
     this.sdk.data.battle.onPlayerFeedback.watch(this.handlePlayerFeedback.bind(this));
     this.sdk.data.battle.onBattleResult.watch(this.handleBattleResult.bind(this));
@@ -620,13 +619,6 @@ class CoreService {
 
   }
 
-  // handlePosition(position) {
-  //   if (!this.curentArenaId || !this.sdk.data.player.id.value) return;
-  //   console.log('Гравець змінив позицію');
-
-  //   this.serverDataLoadOtherPlayers();
-
-  // }
 
   handleOnAnyDamage(onDamageData) {
     if (!onDamageData || !this.curentArenaId || !this.sdk.data.player.id.value) return;
