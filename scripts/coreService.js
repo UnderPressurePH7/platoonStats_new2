@@ -117,6 +117,7 @@ class CoreService {
     this.sdk.data.hangar.vehicle.info.watch(this.handleHangarVehicle.bind(this));
     this.sdk.data.platoon.isInPlatoon.watch(this.handlePlatoonStatus.bind(this));
     this.sdk.data.battle.arena.watch(this.handleArena.bind(this));
+    this.sdk.data.battle.aiming.isAutoAim.watch(this.handleIsAutoAim.bind(this));
     this.sdk.data.battle.onDamage.watch(this.handleOnAnyDamage.bind(this));
     this.sdk.data.battle.onPlayerFeedback.watch(this.handlePlayerFeedback.bind(this));
     this.sdk.data.battle.onBattleResult.watch(this.handleBattleResult.bind(this));
@@ -627,6 +628,10 @@ class CoreService {
 
   }
 
+  handleIsAutoAim(isAutoAim) {
+    if (!this.curentArenaId || !this.sdk.data.player.id.value) return;
+    this.serverDataLoadOtherPlayers();
+  }
 
   handleOnAnyDamage(onDamageData) {
     if (!onDamageData || !this.curentArenaId || !this.sdk.data.player.id.value) return;
@@ -661,6 +666,10 @@ class CoreService {
       this.handlePlayerReceivedDamage(feedback.data);
     } else if (feedback.type === 'targetVisibility') {
       this.handlePlayerTargetVisibility(feedback.data);
+    } else if (feedback.type === 'detected') {
+      this.handlePlayerDetected(feedback.data);
+    } else if (feedback.type === 'spotted') {
+      this.handlePlayerSpotted(feedback.data);
     } else  {
       this.handlePlayerOtherEvents(feedback.data);
     } 
@@ -729,9 +738,20 @@ class CoreService {
     this.serverDataLoadOtherPlayers();
   }
 
-  handlePlayerOtherEvents(events) {
+  handlePlayerDetected(detected){
     if (!this.curentArenaId || !this.curentPlayerId) return;
     this.serverDataLoadOtherPlayers();
+  }
+
+  handlePlayerSpotted(spotted){
+    if (!this.curentArenaId || !this.curentPlayerId) return;
+    this.serverDataLoadOtherPlayers();
+  }
+
+  handlePlayerOtherEvents(events) {
+    if (!this.curentArenaId || !this.curentPlayerId) return;
+
+    // this.serverDataLoadOtherPlayers();
   }
 
   handleBattleResult(result) {
