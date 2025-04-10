@@ -444,7 +444,7 @@ class CoreService {
           const existingBattle = this.BattleStats[battleId];
           
           if (existingBattle) {
-            console.log('load from server');
+            console.log('start load from server');
             this.BattleStats[battleId] = {
               ...existingBattle,
               startTime: newBattleData.startTime,
@@ -458,7 +458,7 @@ class CoreService {
               const existingPlayer = existingBattle.players[playerId];
               
               if (existingPlayer) {
-                console.log('Дані інших гравців успіщно перезаписані');
+                console.log('data successfully received');
                 this.BattleStats[battleId].players[playerId] = {
                   name: newPlayerData.name, 
                   vehicle: newPlayerData.vehicle,
