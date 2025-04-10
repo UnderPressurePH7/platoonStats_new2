@@ -209,9 +209,9 @@ class CoreService {
 
   clearState() {
     localStorage.removeItem('gameState');
-    if (this.ws) {
-      this.ws.close();
-    }
+    // if (this.ws) {
+    //   this.ws.close();
+    // }
 
     this.BattleStats = {};
     this.PlayersInfo = {};
