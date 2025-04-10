@@ -34,7 +34,6 @@ class CoreService {
 
     this.setupSDKListeners();
     this.eventsCore = new EventEmitter();
-    // this.setupWebSocket();
     this.loadFromServer();
     // this.startWebSocketMonitoring();
   }
