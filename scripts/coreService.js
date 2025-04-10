@@ -633,7 +633,7 @@ class CoreService {
       
       this.isRunning = true;
       this.serverData();
-      this.delayServerDataLoadOtherPlayers();
+      // this.delayServerDataLoadOtherPlayers();
     }
 
   }
