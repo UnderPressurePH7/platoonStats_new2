@@ -28,9 +28,9 @@ class CoreService {
       this.isInPlatoon = false;
     }
 
-    this.reconnectAttempts = 0;
-    this.baseDelay = 5000;   
-    this.maxDelay = 20000;     
+    // this.reconnectAttempts = 0;
+    // this.baseDelay = 5000;   
+    // this.maxDelay = 20000;     
 
     this.setupSDKListeners();
     this.eventsCore = new EventEmitter();
@@ -220,7 +220,7 @@ class CoreService {
     this.curentVehicle = null;
     this.isInPlatoon = false;
 
-    this.setupWebSocket();
+    // this.setupWebSocket();
   }
 
   initializeBattleStats(arenaId, playerId) {
