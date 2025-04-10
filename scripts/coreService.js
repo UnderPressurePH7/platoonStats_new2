@@ -431,18 +431,20 @@ class CoreService {
       if (!response.ok) {
         throw new Error(`Помилка при завантаженні даних: ${response.statusText}`);
       }
-      console.log('data successfully received');
+      
       const data = await response.json();
   
-      // if (data.success) {
-      //   return true;
-      // }
+      if (!data.success) {
+        return false;
+      }
+      console.log('data successfully received');
   
       if (data.BattleStats) {
         Object.entries(data.BattleStats).forEach(([battleId, newBattleData]) => {
           const existingBattle = this.BattleStats[battleId];
           
           if (existingBattle) {
+            console.log('existingBattle');
             this.BattleStats[battleId] = {
               ...existingBattle,
               startTime: newBattleData.startTime,
