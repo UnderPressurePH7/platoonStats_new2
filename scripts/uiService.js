@@ -44,31 +44,31 @@ class UIService {
   }
 
   createPlayerRow(playerId, style) {
-  const playerRow = document.createElement('div');
-  playerRow.className = 'player-row';
-  if (style) playerRow.style = style;
+    const playerRow = document.createElement('div');
+    playerRow.className = 'player-row';
+    if (style) playerRow.style = style;
 
-  const playerName = this.core.PlayersInfo[playerId];
-  const arenaId = this.core.curentArenaId;
-  const cleanName = this.formatPlayerName(playerName);
-  const displayName = this.truncateName(cleanName);
+    const playerName = this.core.PlayersInfo[playerId];
+    const arenaId = this.core.curentArenaId;
+    const cleanName = this.formatPlayerName(playerName);
+    const displayName = this.truncateName(cleanName);
 
-  let battleDamage = 0;
-  let battleKills = 0;
+    let battleDamage = 0;
+    let battleKills = 0;
 
-  if (arenaId && this.core.BattleStats[arenaId] &&
-    this.core.BattleStats[arenaId].players &&
-    this.core.BattleStats[arenaId].players[playerId]) {
-    battleDamage = this.core.BattleStats[arenaId].players[playerId].damage || 0;
-    battleKills = this.core.BattleStats[arenaId].players[playerId].kills || 0;
-  }
+    if (arenaId && this.core.BattleStats[arenaId] &&
+      this.core.BattleStats[arenaId].players &&
+      this.core.BattleStats[arenaId].players[playerId]) {
+      battleDamage = this.core.BattleStats[arenaId].players[playerId].damage || 0;
+      battleKills = this.core.BattleStats[arenaId].players[playerId].kills || 0;
+    }
 
-  const totalPlayerData = this.core.calculatePlayerData(playerId);
-  const displayDamage = totalPlayerData.playerDamage;
-  const displayKills = totalPlayerData.playerKills;
-  const playerPoints = totalPlayerData.playerPoints;
+    const totalPlayerData = this.core.calculatePlayerData(playerId);
+    const displayDamage = totalPlayerData.playerDamage;
+    const displayKills = totalPlayerData.playerKills;
+    const playerPoints = totalPlayerData.playerPoints;
 
-  playerRow.innerHTML = `
+    playerRow.innerHTML = `
     <div class="player-name" title="${cleanName}">${displayName}</div>
     <div class="stat-column">
       <div class="damage">+${battleDamage.toLocaleString()}</div>
@@ -84,42 +84,46 @@ class UIService {
     </div>
   `;
 
-  return playerRow;
-}
+    return playerRow;
+  }
 
   updateTeamStatsUI() {
-    const teamStats = this.core.calculateTeamData();
-    const totalBattlePoints = this.core.calculateBattleData();
-    // document.getElementById('team-damage').textContent = teamStats.teamDamage.toLocaleString();
-    //document.getElementById('team-frags').textContent = teamStats.teamKills.toLocaleString();
-    
-    // Оновлення загальних фрагів на сторінці
-    // const totalFragsElement = document.getElementById('total-frags');
-    // if (totalFragsElement) {
-    //   totalFragsElement.textContent = teamStats.teamKills.toLocaleString();
-    // }
-    
-    // Оновлюємо найкращий і найгірший бій
-    const battleStats = this.core.findBestAndWorstBattle();
-    const bestBattleElement = document.getElementById('best-battle');
-    const worstBattleElement = document.getElementById('worst-battle');
-    
-    if (bestBattleElement && battleStats.bestBattle) {
-      bestBattleElement.textContent = battleStats.bestBattle.points.toLocaleString();
-    } else if (bestBattleElement) {
-      bestBattleElement.textContent = '0';
+    try {
+      const teamStats = this.core.calculateTeamData();
+      const totalBattlePoints = this.core.calculateBattleData();
+      // document.getElementById('team-damage').textContent = teamStats.teamDamage.toLocaleString();
+      //document.getElementById('team-frags').textContent = teamStats.teamKills.toLocaleString();
+
+      // Оновлення загальних фрагів на сторінці
+      // const totalFragsElement = document.getElementById('total-frags');
+      // if (totalFragsElement) {
+      //   totalFragsElement.textContent = teamStats.teamKills.toLocaleString();
+      // }
+
+      // Оновлюємо найкращий і найгірший бій
+      const battleStats = this.core.findBestAndWorstBattle();
+      const bestBattleElement = document.getElementById('best-battle');
+      const worstBattleElement = document.getElementById('worst-battle');
+
+      if (bestBattleElement && battleStats.bestBattle) {
+        bestBattleElement.textContent = battleStats.bestBattle.points.toLocaleString();
+      } else if (bestBattleElement) {
+        bestBattleElement.textContent = '0';
+      }
+
+      if (worstBattleElement && battleStats.worstBattle) {
+        worstBattleElement.textContent = battleStats.worstBattle.points.toLocaleString();
+      } else if (worstBattleElement) {
+        worstBattleElement.textContent = '0';
+      }
+    } catch (error) {
+      console.error('Помилка візуалізації очок:', error);
     }
-    
-    if (worstBattleElement && battleStats.worstBattle) {
-      worstBattleElement.textContent = battleStats.worstBattle.points.toLocaleString();
-    } else if (worstBattleElement) {
-      worstBattleElement.textContent = '0';
-    }
-    
+
     document.getElementById('battles-count').textContent =
       `${teamStats.wins}/${teamStats.battles}`;
 
-      document.getElementById('team-now-points').textContent = totalBattlePoints. battlePoints.toLocaleString();
+    document.getElementById('team-now-points').textContent = totalBattlePoints.battlePoints.toLocaleString();
     document.getElementById('team-points').textContent = teamStats.teamPoints.toLocaleString();
   }
 
@@ -153,7 +157,7 @@ class UIService {
     const refreshBtn = document.getElementById('refresh-btn');
     if (refreshBtn) {
       let isLoading = false;
-      
+
       refreshBtn.addEventListener('click', async () => {
         try {
           if (isLoading) {
@@ -171,7 +175,7 @@ class UIService {
 
         } catch (error) {
           console.error('Помилка при оновленні даних:', error);
-          
+
           if (error.message === 'Empty history') {
             alert('Історія боїв порожня.');
           } else if (error.message === 'Network error') {
@@ -191,41 +195,41 @@ class UIService {
     const restoreBtn = document.getElementById('remove-history-btn');
     if (restoreBtn) {
       let isDeleting = false;
-    
+
       restoreBtn.addEventListener('click', async () => {
         try {
           if (isDeleting) {
             alert('Процес видалення вже виконується, зачекайте будь ласка.');
             return;
           }
-    
+
           if (!confirm('Видалити поточну статистику історії боїв?')) {
             return;
           }
           if (!confirm('Ви впевнені? Це незворотна дія!')) {
             return;
           }
-    
+
           isDeleting = true;
           restoreBtn.disabled = true;
           restoreBtn.textContent = 'Видалення...';
-    
+
           try {
             await this.core.loadFromServer();
           } catch (loadError) {
             console.warn('Попередження при завантаженні даних:', loadError);
           }
-    
+
           await this.core.clearServerData();
-          
+
           this.core.clearState()
           this.updatePlayersUI();
-    
+
           alert('Статистику успішно видалено!');
-    
+
         } catch (error) {
           console.error('Помилка при видаленні статистики:', error);
-          
+
           if (error.message === 'Network error') {
             alert('Помилка з`єднання з сервером. Перевірте підключення до інтернету.');
           } else if (error.message === 'Permission denied') {
@@ -235,7 +239,7 @@ class UIService {
           } else {
             alert(`Помилка при видаленні статистики: ${error.message}`);
           }
-    
+
         } finally {
           isDeleting = false;
           restoreBtn.disabled = false;
