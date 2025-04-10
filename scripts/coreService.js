@@ -434,9 +434,9 @@ class CoreService {
       
       const data = await response.json();
   
-      if (data.success) {
-        return true;
-      }
+      // if (data.success) {
+      //   return true;
+      // }
 
       console.log('data successfully received', data);
   
