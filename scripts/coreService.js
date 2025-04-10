@@ -550,7 +550,6 @@ class CoreService {
 
   serverDataLoadOtherPlayers() {
     try {
-      this.delay = 300000;
       this.loadFromServerOtherPlayers();
       this.sleep(50);
       this.eventsCore.emit('statsUpdated');
