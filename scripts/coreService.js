@@ -748,6 +748,7 @@ class CoreService {
     this.serverDataLoadOtherPlayers();
   }
 
+  // підписка на всі події пов'язані із гравцем
   handlePlayerOtherEvents(events) {
     if (!this.curentArenaId || !this.curentPlayerId) return;
 
