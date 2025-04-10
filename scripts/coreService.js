@@ -117,7 +117,6 @@ class CoreService {
     this.sdk.data.hangar.vehicle.info.watch(this.handleHangarVehicle.bind(this));
     this.sdk.data.platoon.isInPlatoon.watch(this.handlePlatoonStatus.bind(this));
     this.sdk.data.battle.arena.watch(this.handleArena.bind(this));
-    // this.sdk.data.battle.aiming.isAutoAim.watch(this.handleIsAutoAim.bind(this));
     this.sdk.data.battle.onDamage.watch(this.handleOnAnyDamage.bind(this));
     this.sdk.data.battle.onPlayerFeedback.watch(this.handlePlayerFeedback.bind(this));
     this.sdk.data.battle.onBattleResult.watch(this.handleBattleResult.bind(this));
@@ -444,7 +443,6 @@ class CoreService {
           const existingBattle = this.BattleStats[battleId];
           
           if (existingBattle) {
-            console.log('start load from server');
             this.BattleStats[battleId] = {
               ...existingBattle,
               startTime: newBattleData.startTime,
@@ -665,12 +663,12 @@ class CoreService {
       this.handlePlayerTanking(feedback.data);
     } else if (feedback.type === 'receivedDamage') {
       this.handlePlayerReceivedDamage(feedback.data);
-    } else if (feedback.type === 'targetVisibility') {
-      this.handlePlayerTargetVisibility(feedback.data);
-    } else if (feedback.type === 'detected') {
-      this.handlePlayerDetected(feedback.data);
-    } else if (feedback.type === 'spotted') {
-      this.handlePlayerSpotted(feedback.data);
+    // } else if (feedback.type === 'targetVisibility') {
+    //   this.handlePlayerTargetVisibility(feedback.data);
+    // } else if (feedback.type === 'detected') {
+    //   this.handlePlayerDetected(feedback.data);
+    // } else if (feedback.type === 'spotted') {
+    //   this.handlePlayerSpotted(feedback.data);
     // } else  {
     //   this.handlePlayerOtherEvents(feedback.data);
     } 
@@ -734,27 +732,27 @@ class CoreService {
   }
 
   // тестова фігня
-  handlePlayerTargetVisibility(targetVisibility) {
-    if (!this.curentArenaId || !this.curentPlayerId) return;
-    this.serverDataLoadOtherPlayers();
-  }
+  // handlePlayerTargetVisibility(targetVisibility) {
+  //   if (!this.curentArenaId || !this.curentPlayerId) return;
+  //   this.serverDataLoadOtherPlayers();
+  // }
 
-  handlePlayerDetected(detected){
-    if (!this.curentArenaId || !this.curentPlayerId) return;
-    this.serverDataLoadOtherPlayers();
-  }
+  // handlePlayerDetected(detected){
+  //   if (!this.curentArenaId || !this.curentPlayerId) return;
+  //   this.serverDataLoadOtherPlayers();
+  // }
 
-  handlePlayerSpotted(spotted){
-    if (!this.curentArenaId || !this.curentPlayerId) return;
-    this.serverDataLoadOtherPlayers();
-  }
+  // handlePlayerSpotted(spotted){
+  //   if (!this.curentArenaId || !this.curentPlayerId) return;
+  //   this.serverDataLoadOtherPlayers();
+  // }
 
-  // підписка на всі події пов'язані із гравцем
-  handlePlayerOtherEvents(events) {
-    if (!this.curentArenaId || !this.curentPlayerId) return;
+  // // підписка на всі події пов'язані із гравцем
+  // handlePlayerOtherEvents(events) {
+  //   if (!this.curentArenaId || !this.curentPlayerId) return;
 
-    // this.serverDataLoadOtherPlayers();
-  }
+  //   // this.serverDataLoadOtherPlayers();
+  // }
 
   handleBattleResult(result) {
     if (!result || !result.vehicles || !result.players) {
