@@ -189,7 +189,7 @@ class CoreService {
     this.sdk.data.hangar.vehicle.info.watch(this.handleHangarVehicle.bind(this));
     this.sdk.data.platoon.isInPlatoon.watch(this.handlePlatoonStatus.bind(this));
     this.sdk.data.battle.arena.watch(this.handleArena.bind(this));
-    this.sdk.data.battle.position.watch(this.handlePosition.bind(this));
+    // this.sdk.data.battle.position.watch(this.handlePosition.bind(this));
     this.sdk.data.battle.onDamage.watch(this.handleOnAnyDamage.bind(this));
     this.sdk.data.battle.onPlayerFeedback.watch(this.handlePlayerFeedback.bind(this));
     this.sdk.data.battle.onBattleResult.watch(this.handleBattleResult.bind(this));
@@ -268,7 +268,7 @@ class CoreService {
         battleKills += player.kills || 0;
       }
     } catch (error) {
-      console.error('Помилка при розрахунку загальних очок гравця:', error);
+      // console.error('Помилка при розрахунку бойових загальних очок гравця:');
     }
 
     return { battlePoints, battleDamage, battleKills };
@@ -289,7 +289,7 @@ class CoreService {
         }
       }
     } catch (error) {
-      console.error('Помилка при розрахунку загальних очок гравця:', error);
+      // console.error('Помилка при розрахунку загальних очок гравця:');
     }
 
     return { playerPoints, playerDamage, playerKills };
@@ -318,7 +318,7 @@ class CoreService {
         }
       }
     } catch (error) {
-      console.error('Помилка при розрахунку загальних очок команди:', error);
+      // console.error('Помилка при розрахунку загальних очок команди:');
     }
 
     return { teamPoints, teamDamage, teamKills, wins, battles };
@@ -620,13 +620,13 @@ class CoreService {
 
   }
 
-  handlePosition(position) {
-    if (!this.curentArenaId || !this.sdk.data.player.id.value) return;
-    console.log('Гравець змінив позицію');
+  // handlePosition(position) {
+  //   if (!this.curentArenaId || !this.sdk.data.player.id.value) return;
+  //   console.log('Гравець змінив позицію');
 
-    this.serverDataLoadOtherPlayers();
+  //   this.serverDataLoadOtherPlayers();
 
-  }
+  // }
 
   handleOnAnyDamage(onDamageData) {
     if (!onDamageData || !this.curentArenaId || !this.sdk.data.player.id.value) return;
