@@ -434,9 +434,10 @@ class CoreService {
       
       const data = await response.json();
   
-      // if (!data.success) {
-      //   return false;
-      // }
+      if (data.success) {
+        return true;
+      }
+
       console.log('data successfully received');
   
       if (data.BattleStats) {
@@ -444,7 +445,7 @@ class CoreService {
           const existingBattle = this.BattleStats[battleId];
           
           if (existingBattle) {
-            console.log('existingBattle');
+            
             this.BattleStats[battleId] = {
               ...existingBattle,
               startTime: newBattleData.startTime,
