@@ -627,11 +627,6 @@ class CoreService {
 
   }
 
-  // handleIsAutoAim(isAutoAim) {
-  //   if (!this.curentArenaId || !this.sdk.data.player.id.value) return;
-  //   this.serverDataLoadOtherPlayers();
-  // }
-
   handleOnAnyDamage(onDamageData) {
     if (!onDamageData || !this.curentArenaId || !this.sdk.data.player.id.value) return;
 
