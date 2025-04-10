@@ -32,6 +32,8 @@ class CoreService {
     // this.baseDelay = 5000;   
     // this.maxDelay = 20000;     
 
+    this.isRunning = false;
+    this.delay = 300000; 
     this.setupSDKListeners();
     this.eventsCore = new EventEmitter();
     this.loadFromServer();
@@ -549,6 +551,7 @@ class CoreService {
 
   serverDataLoadOtherPlayers() {
     try {
+      this.delay = 300000;
       this.loadFromServerOtherPlayers();
       this.sleep(50);
       this.eventsCore.emit('statsUpdated');
@@ -577,6 +580,13 @@ class CoreService {
       this.saveState();
     } catch (error) {
       console.error('Error in serverData:', error);
+    }
+  }
+
+  delayServerDataLoadOtherPlayers() {
+    while(this.isRunning){
+      this.sleep(this.delay)
+      this.serverDataLoadOtherPlayers();
     }
   }
 
@@ -620,8 +630,10 @@ class CoreService {
     this.BattleStats[this.curentArenaId].mapName = arenaData.localizedName || 'Unknown Map';
     this.BattleStats[this.curentArenaId].players[this.curentPlayerId].vehicle = this.curentVehicle;
     this.BattleStats[this.curentArenaId].players[this.curentPlayerId].name = this.sdk.data.player.name.value;
-
+      
+      this.isRunning = true;
       this.serverData();
+      this.delayServerDataLoadOtherPlayers();
     }
 
   }
@@ -771,6 +783,7 @@ class CoreService {
         }
       }
     }
+    this.isRunning = false;
     this.warmupServer();
     this.saveState();
     this.getRandomDelay(); // тест
